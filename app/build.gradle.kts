@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -36,6 +37,18 @@ android {
 }
 
 dependencies {
+    implementation(libs.recyclerview)
+
+    implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
+
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+
+    implementation(libs.fragment.ktx)
+    implementation(libs.fragment)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
