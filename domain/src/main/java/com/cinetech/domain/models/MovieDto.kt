@@ -7,4 +7,5 @@ data class MovieDto(
     val year: Int,
     val country:String?,
     val ageRating:Int,
+    val previewUrl: String?
 )

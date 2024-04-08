@@ -28,6 +28,7 @@
             app:placeholderText="@string/fragment_movie_list_search_textfiled_hint">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchTextInput"
                 android:maxLines="1"
                 android:imeOptions="actionSearch"
                 android:inputType="text"

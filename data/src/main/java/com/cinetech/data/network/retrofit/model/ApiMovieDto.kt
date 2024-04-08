@@ -7,8 +7,9 @@ data class ApiMovieDto(
     val name: String,
     val enName: String?,
     val year: Int,
-    val country:String?,
-    val ageRating:Int,
+    val country: String?,
+    val ageRating: Int,
+    val previewUrl: String?
 )
 
 internal fun ApiMovieDto.toDomainMovieDto(): MovieDto {
@@ -19,5 +20,6 @@ internal fun ApiMovieDto.toDomainMovieDto(): MovieDto {
         year = year,
         country = country,
         ageRating = ageRating,
+        previewUrl = previewUrl,
     )
 }

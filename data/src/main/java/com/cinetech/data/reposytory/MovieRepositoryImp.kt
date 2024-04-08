@@ -9,7 +9,11 @@ import com.cinetech.domain.repository.MovieRepository
 class MovieRepositoryImp(private val movieService: MovieService) : MovieRepository {
 
     override suspend fun searchMovie(param: SearchMoviesParam): SearchMovieResponse {
-        return movieService.searchMoviesByName().toDomainSearchMovieResponse()
+        return movieService.searchMoviesByName(
+            name = param.movieName,
+            page = param.page,
+            limit = param.limitNumber
+        ).toDomainSearchMovieResponse()
     }
 
 }
