@@ -8,7 +8,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:clickable="true"
-    tools:context=".presentation.screens.movie_list.MovieListFragment">
+    tools:context=".presentation.screens.movie_search.MovieSearchFragment">
 
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -38,6 +38,12 @@
         </com.google.android.material.textfield.TextInputLayout>
 
     </com.google.android.material.appbar.MaterialToolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="10dp"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

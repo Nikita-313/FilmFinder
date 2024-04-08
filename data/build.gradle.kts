@@ -30,6 +30,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+
+    implementation(libs.retrofit2)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
 }

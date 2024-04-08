@@ -37,11 +37,16 @@ android {
 }
 
 dependencies {
+    implementation(libs.retrofit2.converter.gson)
+    implementation(libs.retrofit2)
+
     implementation(libs.recyclerview)
 
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.dagger)
+    implementation(project(":data"))
+    implementation(project(":domain"))
     kapt(libs.dagger.compiler)
 
     implementation(libs.navigation.fragment)
