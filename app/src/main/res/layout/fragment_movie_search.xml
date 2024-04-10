@@ -10,7 +10,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".presentation.screens.movie_search.MovieSearchFragment">
+    tools:context=".presentation.screens.movie_search_filter.MovieSearchFilterFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

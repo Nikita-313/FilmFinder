@@ -10,6 +10,13 @@
         android:name="com.cinetech.filmfinder.presentation.screens.movie.MovieFragment"
         android:label="fragment_movie"
         tools:layout="@layout/fragment_movie" />
+
+    <fragment
+        android:id="@+id/MovieSearchFilterDialogFragment"
+        android:name="com.cinetech.filmfinder.presentation.screens.movie_search_filter.MovieSearchFilterFragment"
+        android:label="fragment_movie"
+        tools:layout="@layout/fragment_movie_search_filter" />
+
     <fragment
         android:id="@+id/movieListFragment"
         android:name="com.cinetech.filmfinder.presentation.screens.movie_search.MovieSearchFragment"

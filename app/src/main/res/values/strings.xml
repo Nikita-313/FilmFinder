@@ -5,4 +5,18 @@
     <string name="fragment_movie_search_no_history_text">Нет истории поиска...</string>
     <string name="fragment_movie_search_something_went_wrong">Упс, что-то пошло не так...</string>
     <string name="searchbar_menu_filter">Фильтр</string>
+    <string name="fragment_movie_search_filter_dialog_country">Страны</string>
+    <string name="fragment_movie_search_filter_any_country">любые</string>
+    <string name="fragment_movie_search_filter_any">любой</string>
+    <string name="fragment_movie_search_filter_age_rating_any">неважно</string>
+    <string name="fragment_movie_search_filter_year">Год</string>
+    <string name="fragment_movie_search_filter_age_rating">Возрастной рейтинг</string>
+    <string name="fragment_movie_search_filter_country_select_select">Выбрать</string>
+    <string name="fragment_movie_search_filter_country_select_title">Страны</string>
+    <string name="fragment_movie_search_filter_app_bar_subtitle">Поиск лучших фильмов</string>
+    <string name="fragment_movie_search_filter_to">по</string>
+    <string name="fragment_movie_search_filter_to2">до</string>
+    <string name="fragment_movie_search_filter_from">с</string>
+    <string name="fragment_movie_search_filter_from2">от</string>
+    <string name="fragment_movie_search_filter_show">Показать</string>
 </resources>

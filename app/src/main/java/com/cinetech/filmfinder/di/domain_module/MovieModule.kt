@@ -4,6 +4,7 @@ import com.cinetech.data.network.MovieService
 import com.cinetech.data.repository.MovieRepositoryImp
 import com.cinetech.domain.repository.MovieRepository
 import com.cinetech.domain.usecase.LoadMoviesUseCase
+import com.cinetech.domain.usecase.LoadPossibleCountriesUseCase
 import com.cinetech.domain.usecase.SearchMoviesByNameUseCase
 import dagger.Module
 import dagger.Provides
@@ -25,5 +26,10 @@ class MovieModule {
     @Provides
     fun providesLoadMoviesUseCase(movieRepository: MovieRepository): LoadMoviesUseCase {
         return LoadMoviesUseCase(movieRepository)
+    }
+
+    @Provides
+    fun providesLoadPossibleCountriesUseCase(movieRepository: MovieRepository): LoadPossibleCountriesUseCase {
+        return LoadPossibleCountriesUseCase(movieRepository)
     }
 }

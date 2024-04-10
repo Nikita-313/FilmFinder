@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="age_ration_initial_slider_values">
+        <item>0</item>
+        <item>21</item>
+    </array>
+</resources>

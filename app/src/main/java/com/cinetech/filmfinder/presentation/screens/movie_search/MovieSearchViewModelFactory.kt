@@ -6,10 +6,10 @@ import com.cinetech.domain.usecase.LoadMoviesUseCase
 import com.cinetech.domain.usecase.SearchMoviesByNameUseCase
 import javax.inject.Inject
 
-class MovieSearchFragmentFactory @Inject constructor(
+class MovieSearchViewModelFactory @Inject constructor(
     private val searchMoviesByNameUseCase: SearchMoviesByNameUseCase,
     private val loadMoviesUseCase: LoadMoviesUseCase,
-) :ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

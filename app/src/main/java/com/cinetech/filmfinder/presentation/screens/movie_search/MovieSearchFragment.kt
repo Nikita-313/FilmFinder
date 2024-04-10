@@ -15,9 +15,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cinetech.domain.models.SearchMoviesParam
+import com.cinetech.filmfinder.R
 import com.cinetech.filmfinder.app.appComponent
 import com.cinetech.filmfinder.databinding.FragmentMovieSearchBinding
 import com.cinetech.filmfinder.presentation.screens.movie_search.model.MoviesUiState
+import com.cinetech.filmfinder.presentation.screens.movie_search_filter.MovieSearchFilterFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,10 +35,10 @@ class MovieSearchFragment : Fragment() {
     private var searchAdapterLayoutManager: LinearLayoutManager? = null
 
     @Inject
-    lateinit var movieSearchFragmentFactory: MovieSearchFragmentFactory
+    lateinit var movieSearchViewModelFactory: MovieSearchViewModelFactory
 
     val vm: MovieSearchViewModel by viewModels {
-        movieSearchFragmentFactory
+        movieSearchViewModelFactory
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -50,6 +52,7 @@ class MovieSearchFragment : Fragment() {
         initSearchRecyclerView()
         initSearchTextInput()
         initRetryButton()
+        initFilterButton()
         listenSearchMovie()
         listenSearchLoadingIndicator()
         listenErrors()
@@ -99,6 +102,20 @@ class MovieSearchFragment : Fragment() {
         binding.retryButton.setOnClickListener {
             vm.retryLoadMovies()
         }
+    }
+
+    private fun initFilterButton() {
+        binding.searchBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.search_menu_filter -> showFilterDialog()
+            }
+            return@setOnMenuItemClickListener true
+        }
+    }
+
+    private fun showFilterDialog() {
+        val dialog = MovieSearchFilterFragment()
+        dialog.show(childFragmentManager, "Filter dialog");
     }
 
     private fun listenMovie() {
