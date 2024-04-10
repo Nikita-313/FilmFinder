@@ -1,50 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:clickable="true"
+    android:orientation="vertical"
     tools:context=".presentation.screens.movie_search.MovieSearchFragment">
 
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:elevation="20dp"
-        app:contentInsetStart="20dp"
-        app:contentInsetEnd="20dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/baseline_search_24"
-            app:endIconMode="clear_text"
-            app:expandedHintEnabled="false"
-            app:placeholderText="@string/fragment_movie_list_search_textfiled_hint">
+            android:layout_gravity="top">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/searchTextInput"
-                android:maxLines="1"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:hint="@string/fragment_movie_search_search_hint"
+                app:menu="@menu/searchbar_menu" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </com.google.android.material.appbar.MaterialToolbar>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/movieRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="10dp"
-        android:id="@+id/recyclerView"
+            <LinearLayout
+                android:id="@+id/errorMassage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/fragment_movie_search_something_went_wrong" />
+
+                <Button
+                    android:id="@+id/retryButton"
+                    style="?attr/materialIconButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:icon="@drawable/baseline_refresh_24" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+    <com.google.android.material.search.SearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:hint="@string/fragment_movie_search_search_hint"
+        app:layout_anchor="@id/search_bar">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-</LinearLayout>
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/searchProgressIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/noHistText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/fragment_movie_search_no_history_text" />
+    </com.google.android.material.search.SearchView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

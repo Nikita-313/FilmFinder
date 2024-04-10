@@ -1,6 +1,6 @@
 package com.cinetech.filmfinder.di.data_module
 
-import com.cinetech.data.network.retrofit.MovieService
+import com.cinetech.data.network.MovieService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class NetworkModule {
 
     @Provides
-    fun providesOkHttpClient():OkHttpClient{
+    fun providesOkHttpClient(): OkHttpClient {
         return OkHttpClient().newBuilder().addInterceptor { chain ->
             val originalRequest: Request = chain.request()
             val builder: Request.Builder = originalRequest.newBuilder().header(
@@ -28,7 +28,7 @@ class NetworkModule {
     @Provides
     fun providesRetrofitMovieService(
         client: OkHttpClient
-    ):MovieService {
+    ): MovieService {
         return Retrofit.Builder()
             .client(client)
             .baseUrl("https://api.kinopoisk.dev")

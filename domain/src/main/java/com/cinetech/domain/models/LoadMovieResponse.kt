@@ -1,7 +1,7 @@
 package com.cinetech.domain.models
 
-data class SearchMovieResponse(
-    val docs: List<SearchMovieDto>,
+data class LoadMovieResponse(
+    val docs: List<PreviewMovie>,
     val total: Int,
     val limit: Int,
     val page: Int,

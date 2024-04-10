@@ -1,25 +1,25 @@
-package com.cinetech.data.network.retrofit.model
+package com.cinetech.data.network.model
 
-import com.cinetech.domain.models.MovieDto
+import com.cinetech.domain.models.SearchMovieDto
 
-data class ApiMovieDto(
+data class ApiSearchMovieDto(
     val id: Long,
     val name: String,
     val enName: String?,
     val year: Int,
     val country: String?,
     val ageRating: Int,
-    val previewUrl: String?
+    val poster: ApiPoster
 )
 
-internal fun ApiMovieDto.toDomainMovieDto(): MovieDto {
-    return MovieDto(
+internal fun ApiSearchMovieDto.toDomainSearchMovieDto(): SearchMovieDto {
+    return SearchMovieDto(
         id = id,
         name = name,
         enName = enName,
         year = year,
         country = country,
         ageRating = ageRating,
-        previewUrl = previewUrl,
+        previewUrl = poster.previewUrl,
     )
 }

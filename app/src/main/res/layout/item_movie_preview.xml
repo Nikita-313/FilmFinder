@@ -2,71 +2,76 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:orientation="horizontal"
-    android:layout_marginStart="10dp"
+    android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    android:layout_marginEnd="10dp">
-    <ImageView
-        android:layout_width="70dp"
-        android:layout_marginEnd="10dp"
-        android:layout_height="90dp"
-        android:background="@android:color/darker_gray"/>
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/previewImg"
+        android:layout_width="85dp"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginBottom="10dp"
+        android:scaleType="centerInside" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
-            <TextView
-                android:layout_weight="0.9"
-                android:id="@+id/movieName"
+
+            <LinearLayout
+                android:id="@+id/movieInfo"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:maxLines="1" />
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="0.95"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/movieName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/movieSubName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/movieDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
 
             <TextView
-                android:layout_weight="0.1"
-                android:layout_gravity="top"
-                android:layout_width="0dp"
+                android:id="@+id/kpRating"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="0.05"
                 android:maxLines="1"
-                android:text="8.0"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/movieSubName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:textSize="14sp"
-            android:text="The wolf of wall"/>
-
-        <TextView
-            android:layout_marginTop="5dp"
-            android:id="@+id/movieDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:maxLines="1"
-            android:text="18+ * USA * dramm * kriminal"/>
-
         <View
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"/>
-        <View
-            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
-    </LinearLayout>
+            android:layout_gravity="bottom"
+            android:background="@android:color/darker_gray" />
+    </FrameLayout>
+
 
 </LinearLayout>

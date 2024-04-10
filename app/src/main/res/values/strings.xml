@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">FilmFinder</string>
-    <string name="fragment_movie_list_search_textfiled_hint">Фильмы, сериалы</string>
+    <string name="fragment_movie_search_search_hint">Фильмы, сериалы</string>
+    <string name="item_search_movie_goto">Перейти</string>
+    <string name="fragment_movie_search_no_history_text">Нет истории поиска...</string>
+    <string name="fragment_movie_search_something_went_wrong">Упс, что-то пошло не так...</string>
+    <string name="searchbar_menu_filter">Фильтр</string>
 </resources>
