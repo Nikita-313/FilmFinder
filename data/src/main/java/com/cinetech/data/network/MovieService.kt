@@ -1,6 +1,7 @@
 package com.cinetech.data.network
 
 import com.cinetech.data.network.model.ApiLoadMoviesResponse
+import com.cinetech.data.network.model.ApiPossibleValueDto
 import com.cinetech.data.network.model.ApiSearchMovieResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -21,5 +22,8 @@ interface MovieService {
         @Query("page") page: Int,
         @Query("limit") limit: Int
     ): ApiSearchMovieResponse
+
+    @GET("/v1/movie/possible-values-by-field")
+    suspend fun getPossibleValuesByField(@Query("field") field: String): List<ApiPossibleValueDto>
 
 }

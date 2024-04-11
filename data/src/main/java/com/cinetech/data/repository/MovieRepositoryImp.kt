@@ -2,9 +2,12 @@ package com.cinetech.data.repository
 
 import com.cinetech.data.network.MovieService
 import com.cinetech.data.network.model.toDomainLoadMovieResponse
+import com.cinetech.data.network.model.toDomainPossibleValue
 import com.cinetech.data.network.model.toDomainSearchMovieResponse
 import com.cinetech.domain.models.LoadMovieResponse
 import com.cinetech.domain.models.LoadMoviesParam
+import com.cinetech.domain.models.PossibleValue
+import com.cinetech.domain.models.PossibleValuesParam
 import com.cinetech.domain.models.SearchMovieResponse
 import com.cinetech.domain.models.SearchMoviesParam
 import com.cinetech.domain.repository.MovieRepository
@@ -26,4 +29,9 @@ class MovieRepositoryImp(private val movieService: MovieService) : MovieReposito
         ).toDomainLoadMovieResponse()
     }
 
+    override suspend fun getPossibleValuesByField(param: PossibleValuesParam): List<PossibleValue> {
+        return movieService.getPossibleValuesByField(
+            field = param.field
+        ).map { it.toDomainPossibleValue() }
+    }
 }
