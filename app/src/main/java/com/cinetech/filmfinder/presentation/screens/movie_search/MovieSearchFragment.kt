@@ -55,6 +55,7 @@ class MovieSearchFragment : Fragment() {
         initFilterButton()
         listenSearchMovie()
         listenSearchLoadingIndicator()
+        listenFilterProgressIndicator()
         listenErrors()
         listenMovie()
     }
@@ -114,7 +115,9 @@ class MovieSearchFragment : Fragment() {
     }
 
     private fun showFilterDialog() {
-        val dialog = MovieSearchFilterFragment()
+        val dialog = MovieSearchFilterFragment {
+            vm.setNewLoadParam(it)
+        }
         dialog.show(childFragmentManager, "Filter dialog");
     }
 
@@ -127,18 +130,42 @@ class MovieSearchFragment : Fragment() {
                             movieRecyclerAdapter?.loadingIndicator = false
                             binding.errorMassage.visibility = View.GONE
                             movieRecyclerAdapter?.data = it.movies
+                            movieRecyclerAdapter?.lastPage = it.pages == it.pageNumber
+
+                            if(it.pageNumber == 1) {
+                                movieAdapterLayoutManager?.scrollToPosition(0)
+                            }
+
+                            if(it.movies.isEmpty()) {
+                                binding.movieClearText.visibility = View.VISIBLE
+                            } else {
+                                binding.movieClearText.visibility = View.GONE
+                            }
                         }
 
                         is MoviesUiState.Error -> {
                             movieRecyclerAdapter?.loadingIndicator = false
                             binding.errorMassage.visibility = View.VISIBLE
+                            binding.movieClearText.visibility = View.GONE
                         }
 
                         is MoviesUiState.Loading -> {
                             movieRecyclerAdapter?.loadingIndicator = true
                             binding.errorMassage.visibility = View.GONE
+                            binding.movieClearText.visibility = View.GONE
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun listenFilterProgressIndicator() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.filterLoadIndicatorSateFlow().collect {
+                    if (it) binding.filterProgressIndicator.visibility = View.VISIBLE
+                    else binding.filterProgressIndicator.visibility = View.GONE
                 }
             }
         }
@@ -166,9 +193,11 @@ class MovieSearchFragment : Fragment() {
 
     private fun listenErrors() {
         lifecycleScope.launch {
-            vm.errorFlow().collect {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vm.errorFlow().collect {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

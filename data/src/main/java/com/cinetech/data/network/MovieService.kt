@@ -13,6 +13,9 @@ interface MovieService {
     suspend fun loadMovies(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
+        @Query("countries.name") countriesName: List<String>? = null,
+        @Query("ageRating") ageRating:List<String>? = null,
+        @Query("year") year:List<String>? = null,
         @Query("selectFields") selectFields: List<String> = arrayListOf("id", "name", "alternativeName", "year", "ageRating", "countries", "poster", "rating")
     ): ApiLoadMoviesResponse
 

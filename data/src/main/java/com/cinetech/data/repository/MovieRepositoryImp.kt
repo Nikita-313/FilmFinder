@@ -18,14 +18,17 @@ class MovieRepositoryImp(private val movieService: MovieService) : MovieReposito
         return movieService.searchMoviesByName(
             name = param.movieName,
             page = param.page,
-            limit = param.limitNumber
+            limit = param.limitNumber,
         ).toDomainSearchMovieResponse()
     }
 
     override suspend fun loadMovies(param: LoadMoviesParam): LoadMovieResponse {
         return movieService.loadMovies(
             page = param.page,
-            limit = param.limitNumber
+            limit = param.limitNumber,
+            countriesName = param.countries,
+            ageRating = param.ageRantingRange?.let { listOf("${it.from}-${it.to}") },
+            year = param.yearRange?.let { listOf("${it.from}-${it.to}") }
         ).toDomainLoadMovieResponse()
     }
 

@@ -2,6 +2,6 @@
 <resources>
     <array name="age_ration_initial_slider_values">
         <item>0</item>
-        <item>21</item>
+        <item>18</item>
     </array>
 </resources>

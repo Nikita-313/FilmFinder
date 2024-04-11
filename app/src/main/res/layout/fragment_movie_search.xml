@@ -17,18 +17,32 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/filterProgressIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center"
+                android:layout_margin="13dp"
+                android:indeterminate="true"
+                android:translationZ="10dp"
+                android:visibility="gone"
+                app:indicatorSize="46dp"
+                app:trackThickness="3dp" />
 
             <com.google.android.material.search.SearchBar
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/fragment_movie_search_search_hint"
-                app:menu="@menu/searchbar_menu" />
-        </com.google.android.material.appbar.AppBarLayout>
+                app:menu="@menu/searchbar_menu">
+
+            </com.google.android.material.search.SearchBar>
+        </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -38,6 +52,16 @@
                 android:id="@+id/movieRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/movieClearText"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:text="Ничего не найдено. Попробуйте поменять фильтры поиска..."
+                android:textAlignment="center"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/errorMassage"

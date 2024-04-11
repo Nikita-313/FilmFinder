@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.cinetech.domain.models.LoadMoviesParam
 import com.cinetech.filmfinder.R
 import com.cinetech.filmfinder.app.appComponent
 import com.cinetech.filmfinder.databinding.FragmentMovieSearchFilterBinding
@@ -32,7 +33,9 @@ import java.util.Calendar
 import javax.inject.Inject
 
 
-class MovieSearchFilterFragment : BottomSheetDialogFragment() {
+class MovieSearchFilterFragment(
+    private val callback: (params: LoadMoviesParam) -> Unit
+) : BottomSheetDialogFragment() {
 
     private val vm: MovieSearchFilterViewModel by viewModels {
         movieSearchFilterViewModelFactory
@@ -63,6 +66,7 @@ class MovieSearchFilterFragment : BottomSheetDialogFragment() {
         initCountryDialogButton()
         initAgeRating()
         initRetryLoadDataButton()
+        initOnDoneButtonListener()
         listenAgeRating()
         listenYear()
         listenLoadingCountry()
@@ -293,6 +297,13 @@ class MovieSearchFilterFragment : BottomSheetDialogFragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun initOnDoneButtonListener(){
+        binding.showButton.setOnClickListener {
+            callback(vm.getSearchParam())
+            dismiss()
         }
     }
 }

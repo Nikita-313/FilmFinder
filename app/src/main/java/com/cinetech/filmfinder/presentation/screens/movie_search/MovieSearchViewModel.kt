@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cinetech.domain.models.LoadMovieResponse
 import com.cinetech.domain.models.LoadMoviesParam
 import com.cinetech.domain.models.PreviewMovie
 import com.cinetech.domain.models.SearchMovieDto
@@ -39,18 +40,22 @@ class MovieSearchViewModel(
     private val mutableErrorFlow = MutableSharedFlow<String>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     fun errorFlow(): SharedFlow<String> = mutableErrorFlow
 
-    private val moviesMutableStateFlow = MutableStateFlow<MoviesUiState>(MoviesUiState.Success(emptyList()))
+    private val moviesMutableStateFlow = MutableStateFlow<MoviesUiState>(MoviesUiState.Loading)
     fun moviesSateFlow(): StateFlow<MoviesUiState> = moviesMutableStateFlow
 
+    private val filterLoadIndicatorMutableStateFlow = MutableStateFlow(false)
+    fun filterLoadIndicatorSateFlow(): StateFlow<Boolean> = filterLoadIndicatorMutableStateFlow
+
     private var lastSearchParam: SearchMoviesParam? = null
-    private var searchMovieJob: Job? = null;
+    private var searchMovieJob: Job? = null
 
     private var lastLoadParam = LoadMoviesParam()
-    private var loadMovieJob: Job? = null;
+    private var lastLoadMovieResponse: LoadMovieResponse? = null
+    private var loadMovieJob: Job? = null
     private val movies = mutableListOf<PreviewMovie>()
 
     init {
-        loadMovieJob = loadMovies()
+        loadMovieJob = viewModelScope.launch { loadMovies() }
     }
 
     private suspend fun loadMovieByName(searchMoviesParam: SearchMoviesParam) {
@@ -81,26 +86,58 @@ class MovieSearchViewModel(
         }
     }
 
-    private fun loadMovies() = viewModelScope.launch {
+    private suspend fun loadMovies() {
         try {
             moviesMutableStateFlow.emit(MoviesUiState.Loading)
-            val response = loadMoviesUseCase.execute(lastLoadParam).docs
-            movies.addAll(response)
-            moviesMutableStateFlow.emit(MoviesUiState.Success(movies.toList()))
+            val response = loadMoviesUseCase.execute(lastLoadParam)
+            lastLoadMovieResponse = response
+            movies.addAll(response.docs)
+            moviesMutableStateFlow.emit(
+                MoviesUiState.Success(
+                    movies = movies.toList(),
+                    pages = response.pages,
+                    pageNumber = response.page
+                )
+            )
         } catch (e: Exception) {
             moviesMutableStateFlow.emit(MoviesUiState.Error(e.toString()))
             exceptionChecker(e)
         }
     }
 
+    fun setNewLoadParam(loadParam: LoadMoviesParam) {
+        if (lastLoadParam.countries == loadParam.countries &&
+            lastLoadParam.yearRange == loadParam.yearRange &&
+            lastLoadParam.ageRantingRange == loadParam.ageRantingRange
+        ) return
+
+        filterLoadIndicatorMutableStateFlow.tryEmit(true)
+        lastLoadParam = loadParam
+        movies.clear()
+        loadMovieJob?.cancel()
+        loadMovieJob = viewModelScope.launch {
+            filterLoadIndicatorMutableStateFlow.tryEmit(true)
+            loadMovies()
+            filterLoadIndicatorMutableStateFlow.tryEmit(false)
+        }
+
+    }
+
     fun nextMoviesPage() {
-        lastLoadParam = lastLoadParam.copy(page = lastLoadParam.page + 1)
-        loadMovieJob = loadMovies()
+        lastLoadMovieResponse?.let {
+            if (loadMovieJob?.isActive == true) return
+            val nextPage = it.page + 1
+            if (nextPage > it.pages) return
+            lastLoadParam = lastLoadParam.copy(page = nextPage)
+            loadMovieJob = viewModelScope.launch { loadMovies() }
+        }
     }
 
     fun retryLoadMovies() {
         loadMovieJob?.cancel()
-        loadMovieJob = loadMovies()
+        loadMovieJob = viewModelScope.launch {
+            loadMovies()
+        }
     }
 
     private fun exceptionChecker(e: Exception) {

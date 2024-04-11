@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -20,6 +21,11 @@ class MovieRecyclerAdapter : RecyclerView.Adapter<MovieRecyclerAdapter.BaseHolde
         }
 
     var loadingIndicator: Boolean = false
+        set(newValue) {
+            field = newValue
+            notifyItemChanged(data.size)
+        }
+    var lastPage = false
         set(newValue) {
             field = newValue
             notifyItemChanged(data.size)
@@ -62,10 +68,10 @@ class MovieRecyclerAdapter : RecyclerView.Adapter<MovieRecyclerAdapter.BaseHolde
             if (movie.countries.isNotEmpty()) {
                 movie.countries.forEachIndexed { i, country ->
                     if (i != movie.countries.size - 1) description += "$country, "
-                    else description += "$country • "
+                    else description += "$country "
                 }
             }
-            if (movie.ageRating != null) description += "${movie.ageRating}+"
+            if (movie.ageRating != null) description += "• ${movie.ageRating}+"
             if (!movie.preViewUrl.isNullOrEmpty()) {
                 holder.preViewImage.load(movie.preViewUrl) {
                     crossfade(true)
@@ -81,10 +87,17 @@ class MovieRecyclerAdapter : RecyclerView.Adapter<MovieRecyclerAdapter.BaseHolde
 
         is LoadingIndicatorHolder -> {
             if (loadingIndicator) {
-                holder.view.visibility = View.VISIBLE
+                holder.progressIndicator.visibility = View.VISIBLE
             } else {
-                holder.view.visibility = View.GONE
+                holder.progressIndicator.visibility = View.GONE
             }
+
+            if(lastPage) {
+                holder.theEndText.visibility = View.VISIBLE
+            } else {
+                holder.theEndText.visibility = View.GONE
+            }
+
         }
 
         else -> throw RuntimeException("Item type: $holder. Not supported")
@@ -100,7 +113,10 @@ class MovieRecyclerAdapter : RecyclerView.Adapter<MovieRecyclerAdapter.BaseHolde
         val kpRating: TextView = view.findViewById(R.id.kpRating)
     }
 
-    class LoadingIndicatorHolder(val view: View) : BaseHolder(view)
+    class LoadingIndicatorHolder(view: View) : BaseHolder(view) {
+        val progressIndicator: ProgressBar = view.findViewById(R.id.progressIndicator)
+        val theEndText: TextView = view.findViewById(R.id.theEnd)
+    }
 
     companion object {
         private const val TYPE_ITEM = 1
