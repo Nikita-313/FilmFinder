@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,8 +24,10 @@ import com.cinetech.filmfinder.presentation.screens.movie_search_filter.model.Ye
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.RangeSlider
+import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -59,7 +62,7 @@ class MovieSearchFilterFragment : BottomSheetDialogFragment() {
         initYearDialogButton()
         initCountryDialogButton()
         initAgeRating()
-        initAppBar()
+        initRetryLoadDataButton()
         listenAgeRating()
         listenYear()
         listenLoadingCountry()
@@ -89,9 +92,9 @@ class MovieSearchFilterFragment : BottomSheetDialogFragment() {
 
     }
 
-    private fun initAppBar() {
-        binding.topAppBar.setNavigationOnClickListener {
-
+    private fun initRetryLoadDataButton() {
+        binding.retryButton.setOnClickListener {
+            vm.loadCountriesFromServer()
         }
     }
 
@@ -275,7 +278,9 @@ class MovieSearchFilterFragment : BottomSheetDialogFragment() {
                                 loadingIndicator.visibility = View.GONE
                                 content.visibility = View.INVISIBLE
                                 errorMassage.visibility = View.VISIBLE
-
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(requireContext(), it.massage, Toast.LENGTH_SHORT).show()
+                                }
                             }
 
                             is LoadingCountryFilterUiState.Loading -> {

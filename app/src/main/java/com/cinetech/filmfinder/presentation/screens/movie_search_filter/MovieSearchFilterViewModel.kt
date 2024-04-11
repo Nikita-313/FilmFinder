@@ -28,24 +28,22 @@ class MovieSearchFilterViewModel(
     private var countries: MutableList<CountryFilterUiState> = mutableListOf()
 
     init {
-        viewModelScope.launch {
-            loadCountriesFromServer()
-        }
+        loadCountriesFromServer()
     }
 
-    private suspend fun loadCountriesFromServer() {
-        try {
-            countryMutableStateFlow.emit(LoadingCountryFilterUiState.Loading)
-            delay(1000)
-            val response = loadPossibleCountriesUseCase.execute()
-            countries = response.map { CountryFilterUiState(name = it, isSelected = false) }.toMutableList()
+    fun loadCountriesFromServer() {
+        viewModelScope.launch {
+            try {
+                countryMutableStateFlow.emit(LoadingCountryFilterUiState.Loading)
+                val response = loadPossibleCountriesUseCase.execute()
+                countries = response.map { CountryFilterUiState(name = it, isSelected = false) }.toMutableList()
 
-            countryMutableStateFlow.emit(LoadingCountryFilterUiState.Success(countries))
+                countryMutableStateFlow.emit(LoadingCountryFilterUiState.Success(countries))
 
-        } catch (e: Exception) {
-            countryMutableStateFlow.emit(LoadingCountryFilterUiState.Error(e.toString()))
+            } catch (e: Exception) {
+                countryMutableStateFlow.emit(LoadingCountryFilterUiState.Error(e.toString()))
+            }
         }
-
     }
 
 
@@ -64,7 +62,7 @@ class MovieSearchFilterViewModel(
 
     fun uncheckAllSelectedCountries() {
         countries.forEachIndexed { i, country ->
-            if(country.isSelected) {
+            if (country.isSelected) {
                 countries[i] = countries[i].copy(isSelected = false)
             }
         }
