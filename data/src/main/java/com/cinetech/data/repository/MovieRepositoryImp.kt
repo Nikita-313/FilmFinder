@@ -2,10 +2,12 @@ package com.cinetech.data.repository
 
 import com.cinetech.data.network.MovieService
 import com.cinetech.data.network.model.toDomainLoadMovieResponse
+import com.cinetech.data.network.model.toDomainMovie
 import com.cinetech.data.network.model.toDomainPossibleValue
 import com.cinetech.data.network.model.toDomainSearchMovieResponse
-import com.cinetech.domain.models.LoadMovieResponse
+import com.cinetech.domain.models.LoadMoviesResponse
 import com.cinetech.domain.models.LoadMoviesParam
+import com.cinetech.domain.models.Movie
 import com.cinetech.domain.models.PossibleValue
 import com.cinetech.domain.models.PossibleValuesParam
 import com.cinetech.domain.models.SearchMovieResponse
@@ -22,7 +24,7 @@ class MovieRepositoryImp(private val movieService: MovieService) : MovieReposito
         ).toDomainSearchMovieResponse()
     }
 
-    override suspend fun loadMovies(param: LoadMoviesParam): LoadMovieResponse {
+    override suspend fun loadMovies(param: LoadMoviesParam): LoadMoviesResponse {
         return movieService.loadMovies(
             page = param.page,
             limit = param.limitNumber,
@@ -33,8 +35,14 @@ class MovieRepositoryImp(private val movieService: MovieService) : MovieReposito
     }
 
     override suspend fun getPossibleValuesByField(param: PossibleValuesParam): List<PossibleValue> {
-        return movieService.getPossibleValuesByField(
+        return movieService.loadPossibleValuesByField(
             field = param.field
         ).map { it.toDomainPossibleValue() }
     }
+
+    override suspend fun loadMovieByIdUseCase(id: Int): Movie {
+        return movieService.loadMovieById(id).toDomainMovie()
+    }
+
+
 }

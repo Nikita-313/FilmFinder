@@ -1,6 +1,6 @@
 package com.cinetech.data.network.model
 
-import com.cinetech.domain.models.LoadMovieResponse
+import com.cinetech.domain.models.LoadMoviesResponse
 
 
 data class ApiLoadMoviesResponse(
@@ -11,8 +11,8 @@ data class ApiLoadMoviesResponse(
     val pages: Int,
 )
 
-fun ApiLoadMoviesResponse.toDomainLoadMovieResponse(): LoadMovieResponse {
-    return LoadMovieResponse(
+fun ApiLoadMoviesResponse.toDomainLoadMovieResponse(): LoadMoviesResponse {
+    return LoadMoviesResponse(
         docs = docs.map { it.toDomainPreviewMovie() },
         total = total,
         limit = limit,

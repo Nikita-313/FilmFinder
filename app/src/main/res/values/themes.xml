@@ -3,6 +3,8 @@
     <style name="Base.Theme.FilmFinder" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="actionBarTheme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="Theme.FilmFinder" parent="Base.Theme.FilmFinder" />

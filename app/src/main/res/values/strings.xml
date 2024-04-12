@@ -20,4 +20,5 @@
     <string name="fragment_movie_search_filter_from2">от</string>
     <string name="fragment_movie_search_filter_show">Показать</string>
     <string name="item_movie_load_indicator_the_end">КОНЕЦ СПИСКА</string>
+    <string name="fragment_movie_votes">оценок</string>
 </resources>

@@ -3,6 +3,7 @@ package com.cinetech.filmfinder.presentation.screens.movie_search
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -12,12 +13,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cinetech.domain.models.SearchMoviesParam
 import com.cinetech.filmfinder.R
 import com.cinetech.filmfinder.app.appComponent
 import com.cinetech.filmfinder.databinding.FragmentMovieSearchBinding
+import com.cinetech.filmfinder.presentation.screens.movie.MovieFragment
 import com.cinetech.filmfinder.presentation.screens.movie_search.model.MoviesUiState
 import com.cinetech.filmfinder.presentation.screens.movie_search_filter.MovieSearchFilterFragment
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +69,13 @@ class MovieSearchFragment : Fragment() {
     }
 
     private fun initMovieRecyclerView() {
-        movieRecyclerAdapter = MovieRecyclerAdapter()
+        movieRecyclerAdapter = MovieRecyclerAdapter{id,name->
+            if(id == null) return@MovieRecyclerAdapter
+            val bundle = Bundle()
+            bundle.putInt(MovieFragment.MOVIE_ID_KEY,id)
+            bundle.putString(MovieFragment.MOVIE_NAME_KEY,name)
+            findNavController().navigate(R.id.movieFragment,bundle)
+        }
         movieAdapterLayoutManager = LinearLayoutManager(requireContext())
         binding.movieRecyclerView.apply {
             layoutManager = movieAdapterLayoutManager

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cinetech.domain.models.LoadMovieResponse
+import com.cinetech.domain.models.LoadMoviesResponse
 import com.cinetech.domain.models.LoadMoviesParam
 import com.cinetech.domain.models.PreviewMovie
 import com.cinetech.domain.models.SearchMovieDto
@@ -50,7 +50,7 @@ class MovieSearchViewModel(
     private var searchMovieJob: Job? = null
 
     private var lastLoadParam = LoadMoviesParam()
-    private var lastLoadMovieResponse: LoadMovieResponse? = null
+    private var lastLoadMoviesResponse: LoadMoviesResponse? = null
     private var loadMovieJob: Job? = null
     private val movies = mutableListOf<PreviewMovie>()
 
@@ -90,7 +90,7 @@ class MovieSearchViewModel(
         try {
             moviesMutableStateFlow.emit(MoviesUiState.Loading)
             val response = loadMoviesUseCase.execute(lastLoadParam)
-            lastLoadMovieResponse = response
+            lastLoadMoviesResponse = response
             movies.addAll(response.docs)
             moviesMutableStateFlow.emit(
                 MoviesUiState.Success(
@@ -124,7 +124,7 @@ class MovieSearchViewModel(
     }
 
     fun nextMoviesPage() {
-        lastLoadMovieResponse?.let {
+        lastLoadMoviesResponse?.let {
             if (loadMovieJob?.isActive == true) return
             val nextPage = it.page + 1
             if (nextPage > it.pages) return

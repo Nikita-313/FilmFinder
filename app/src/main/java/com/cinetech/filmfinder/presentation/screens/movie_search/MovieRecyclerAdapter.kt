@@ -12,7 +12,7 @@ import com.cinetech.domain.models.PreviewMovie
 import com.cinetech.filmfinder.R
 import java.util.Locale
 
-class MovieRecyclerAdapter : RecyclerView.Adapter<MovieRecyclerAdapter.BaseHolder>() {
+class MovieRecyclerAdapter(private val listner: (id: Int?, name: String?) -> Unit) : RecyclerView.Adapter<MovieRecyclerAdapter.BaseHolder>() {
 
     var data: List<PreviewMovie> = emptyList()
         set(newValue) {
@@ -30,6 +30,7 @@ class MovieRecyclerAdapter : RecyclerView.Adapter<MovieRecyclerAdapter.BaseHolde
             field = newValue
             notifyItemChanged(data.size)
         }
+
 
     override fun getItemCount(): Int = data.size + 1
 
@@ -92,7 +93,7 @@ class MovieRecyclerAdapter : RecyclerView.Adapter<MovieRecyclerAdapter.BaseHolde
                 holder.progressIndicator.visibility = View.GONE
             }
 
-            if(lastPage) {
+            if (lastPage) {
                 holder.theEndText.visibility = View.VISIBLE
             } else {
                 holder.theEndText.visibility = View.GONE
@@ -105,12 +106,21 @@ class MovieRecyclerAdapter : RecyclerView.Adapter<MovieRecyclerAdapter.BaseHolde
     }
 
     abstract class BaseHolder(view: View) : RecyclerView.ViewHolder(view)
-    class MovieHolder(view: View) : BaseHolder(view) {
+    inner class MovieHolder(view: View) : BaseHolder(view) {
         val movieName: TextView = view.findViewById(R.id.movieName)
         val movieSubName: TextView = view.findViewById(R.id.movieSubName)
         val movieDescription: TextView = view.findViewById(R.id.movieDescription)
         val preViewImage: ImageView = view.findViewById(R.id.previewImg)
         val kpRating: TextView = view.findViewById(R.id.kpRating)
+
+        init {
+            view.setOnClickListener {
+                val position = getBindingAdapterPosition()
+                if (position != RecyclerView.NO_POSITION) {
+                    listner(data[position].id?.toInt(),data[position].name)
+                }
+            }
+        }
     }
 
     class LoadingIndicatorHolder(view: View) : BaseHolder(view) {
