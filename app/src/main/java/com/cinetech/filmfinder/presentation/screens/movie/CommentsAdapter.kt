@@ -17,7 +17,7 @@ import java.util.Date
 import java.util.Locale
 
 
-class CommentsAdapter : RecyclerView.Adapter<CommentsAdapter.BaseHolder>() {
+class CommentsAdapter(private val setOnCommentClickListener: (title: String?, body: String?) -> Unit) : RecyclerView.Adapter<CommentsAdapter.BaseHolder>() {
 
 
     var items: List<Comment> = emptyList()
@@ -103,7 +103,16 @@ class CommentsAdapter : RecyclerView.Adapter<CommentsAdapter.BaseHolder>() {
 
     abstract class BaseHolder(view: View) : RecyclerView.ViewHolder(view)
 
-    class ItemHolder(val binding: ItemCommentBinding) : BaseHolder(binding.root)
+    inner class ItemHolder(val binding: ItemCommentBinding) : BaseHolder(binding.root) {
+        init {
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    setOnCommentClickListener(items[position].title, items[position].review)
+                }
+            }
+        }
+    }
 
     class LoadingHoled(view: View) : BaseHolder(view) {
         val progressIndicator: ProgressBar = view.findViewById(R.id.progressIndicator)

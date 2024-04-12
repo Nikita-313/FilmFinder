@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -46,6 +47,15 @@ class MovieFragment : Fragment() {
     private var commentsAdapter: CommentsAdapter? = null
     private var commentsLayoutManager: LinearLayoutManager? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        })
+    }
+
     override fun onAttach(context: Context) {
         context.appComponent.inject(this)
         super.onAttach(context)
@@ -55,7 +65,7 @@ class MovieFragment : Fragment() {
         binding = FragmentMovieBinding.inflate(inflater)
         movieName = arguments?.getString(MOVIE_NAME_KEY) ?: ""
         val movieId: Int = arguments?.getInt(MOVIE_ID_KEY) ?: 0
-        vm = ViewModelProvider(this,movieViewModelFactory.create(movieId))[MovieViewModel::class.java]
+        vm = ViewModelProvider(this, movieViewModelFactory.create(movieId))[MovieViewModel::class.java]
         return binding.root
     }
 
@@ -68,7 +78,7 @@ class MovieFragment : Fragment() {
         listenData()
     }
 
-    private fun initReloadData(){
+    private fun initReloadData() {
         binding.errorMassageInclude.retryButton.setOnClickListener {
             vm.loadMovieData()
         }
@@ -100,7 +110,13 @@ class MovieFragment : Fragment() {
     }
 
     private fun initPostersRecycler() {
-        posterAdapter = PosterAdapter()
+        posterAdapter = PosterAdapter { id, name ->
+            if (id == null) return@PosterAdapter
+            val bundle = Bundle()
+            bundle.putInt(MOVIE_ID_KEY, id)
+            bundle.putString(MOVIE_NAME_KEY, name)
+            findNavController().navigate(R.id.movieFragment, bundle)
+        }
         posterLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         posterLayoutManager?.scrollToPosition(Int.MAX_VALUE / 2)
         binding.recyclerPosters.apply {
@@ -110,7 +126,9 @@ class MovieFragment : Fragment() {
     }
 
     private fun initCommentsRecycler() {
-        commentsAdapter = CommentsAdapter()
+        commentsAdapter = CommentsAdapter { t, b ->
+            showMoreDialog(t, b ?: "")
+        }
         commentsLayoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerComments.apply {
             adapter = commentsAdapter
@@ -153,8 +171,12 @@ class MovieFragment : Fragment() {
 
             if (movie.description != null) {
                 binding.description.text = movie.description
+                binding.moreDescriptionButton.setOnClickListener {
+                    showMoreDialog(movie.shortDescription, movie.description ?: "")
+                }
             } else {
                 binding.description.visibility = View.GONE
+                binding.moreDescriptionButton.visibility = View.GONE
             }
 
             if (movie.kpRating != null) {
@@ -229,6 +251,11 @@ class MovieFragment : Fragment() {
             } else {
             }
         }
+    }
+
+    private fun showMoreDialog(title: String?, body: String) {
+        val dialog = TextBottomDialogFragment(title, body)
+        dialog.show(childFragmentManager, "Text dialog")
     }
 
     companion object {

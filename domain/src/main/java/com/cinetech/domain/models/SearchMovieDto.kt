@@ -7,5 +7,6 @@ data class SearchMovieDto(
     val year: Int,
     val country: String?,
     val ageRating: Int,
-    val previewUrl: String?
+    val previewUrl: String?,
+    val kpRating: Double?
 )

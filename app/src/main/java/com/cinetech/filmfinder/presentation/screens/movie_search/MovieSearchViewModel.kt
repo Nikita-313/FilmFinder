@@ -122,6 +122,7 @@ class MovieSearchViewModel(
         }
 
     }
+    fun getLastLoadParam() = lastLoadParam
 
     fun nextMoviesPage() {
         lastLoadMoviesResponse?.let {
@@ -152,7 +153,7 @@ class MovieSearchViewModel(
             movieName = name,
             movieAlternativeName = enName ?: "",
             movieYear = year,
-            movieRating = 0.0,
+            movieRating = kpRating,
             preViewUrl = previewUrl,
         )
     }

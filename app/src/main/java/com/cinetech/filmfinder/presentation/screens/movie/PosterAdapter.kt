@@ -1,6 +1,7 @@
 package com.cinetech.filmfinder.presentation.screens.movie
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -9,7 +10,7 @@ import com.cinetech.filmfinder.R
 import com.cinetech.filmfinder.databinding.ItemPosterPreviewBinding
 import java.util.Locale
 
-class PosterAdapter : RecyclerView.Adapter<PosterAdapter.ItemHolder>() {
+class PosterAdapter(private val onMovieClickListener: (id: Int?, name: String?) -> Unit) : RecyclerView.Adapter<PosterAdapter.ItemHolder>() {
 
 
     var items: List<LinkedMovie> = emptyList()
@@ -30,7 +31,7 @@ class PosterAdapter : RecyclerView.Adapter<PosterAdapter.ItemHolder>() {
         holder.bind(items[position % items.size])
     }
 
-    class ItemHolder(private val binding: ItemPosterPreviewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ItemHolder(private val binding: ItemPosterPreviewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: LinkedMovie) {
             binding.apply {
                 image.load(item.preViewUrl) {
@@ -38,6 +39,7 @@ class PosterAdapter : RecyclerView.Adapter<PosterAdapter.ItemHolder>() {
                     placeholder(R.drawable.ic_logo_foreground)
                 }
                 item.kpRating?.let {
+                    kpRating.visibility = View.VISIBLE
                     kpRating.text = String.format(Locale.US, "%.1f", it)
                 }
                 item.name?.let {
@@ -45,6 +47,15 @@ class PosterAdapter : RecyclerView.Adapter<PosterAdapter.ItemHolder>() {
                 }
                 item.year?.let {
                     movieDescription.text = it.toString()
+                }
+            }
+        }
+
+        init {
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition;
+                if(position != RecyclerView.NO_POSITION) {
+                    onMovieClickListener(items[position % items.size].id.toInt(),items[position % items.size].name)
                 }
             }
         }

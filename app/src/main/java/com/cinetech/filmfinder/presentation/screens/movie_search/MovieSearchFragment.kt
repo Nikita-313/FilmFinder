@@ -71,10 +71,7 @@ class MovieSearchFragment : Fragment() {
     private fun initMovieRecyclerView() {
         movieRecyclerAdapter = MovieRecyclerAdapter{id,name->
             if(id == null) return@MovieRecyclerAdapter
-            val bundle = Bundle()
-            bundle.putInt(MovieFragment.MOVIE_ID_KEY,id)
-            bundle.putString(MovieFragment.MOVIE_NAME_KEY,name)
-            findNavController().navigate(R.id.movieFragment,bundle)
+            gotoMovieScreen(id,name)
         }
         movieAdapterLayoutManager = LinearLayoutManager(requireContext())
         binding.movieRecyclerView.apply {
@@ -93,12 +90,22 @@ class MovieSearchFragment : Fragment() {
     }
 
     private fun initSearchRecyclerView() {
-        searchRecyclerAdapter = SearchRecyclerAdapter()
+        searchRecyclerAdapter = SearchRecyclerAdapter{id,name->
+            if(id == null) return@SearchRecyclerAdapter
+            gotoMovieScreen(id,name)
+        }
         searchAdapterLayoutManager = LinearLayoutManager(requireContext())
         binding.searchRecyclerView.apply {
             layoutManager = searchAdapterLayoutManager
             adapter = searchRecyclerAdapter
         }
+    }
+
+    private fun gotoMovieScreen(id:Int,name:String?){
+        val bundle = Bundle()
+        bundle.putInt(MovieFragment.MOVIE_ID_KEY,id)
+        bundle.putString(MovieFragment.MOVIE_NAME_KEY,name)
+        findNavController().navigate(R.id.movieFragment,bundle)
     }
 
     private fun initSearchTextInput() {
@@ -124,10 +131,10 @@ class MovieSearchFragment : Fragment() {
     }
 
     private fun showFilterDialog() {
-        val dialog = MovieSearchFilterFragment {
+        val dialog = MovieSearchFilterFragment(vm.getLastLoadParam()) {
             vm.setNewLoadParam(it)
         }
-        dialog.show(childFragmentManager, "Filter dialog");
+        dialog.show(childFragmentManager, "Filter dialog")
     }
 
     private fun listenMovie() {

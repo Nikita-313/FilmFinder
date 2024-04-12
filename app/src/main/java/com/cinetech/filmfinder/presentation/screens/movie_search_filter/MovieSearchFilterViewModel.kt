@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class MovieSearchFilterViewModel(
+    private val loadMoviesParam: LoadMoviesParam,
     private val loadPossibleCountriesUseCase: LoadPossibleCountriesUseCase
 ) : ViewModel() {
 
@@ -30,9 +31,26 @@ class MovieSearchFilterViewModel(
     private val countryMutableStateFlow = MutableStateFlow<LoadingCountryFilterUiState>(LoadingCountryFilterUiState.Loading)
     fun countryRangeStateFlow(): StateFlow<LoadingCountryFilterUiState> = countryMutableStateFlow
     private var countries: MutableList<CountryFilterUiState> = mutableListOf()
+    private var countriesIndex: MutableMap<String, Int> = mutableMapOf()
 
     init {
+        setLoadMoviesParam()
         loadCountriesFromServer()
+    }
+
+    private fun setLoadMoviesParam() {
+        loadMoviesParam.ageRantingRange?.let {
+            updateAgeRatingRange(it.from, it.to)
+        }
+        loadMoviesParam.yearRange?.let {
+            val tmp = YearRange()
+            var from = -1
+            var to = -1
+            if(tmp.from != it.from) from = it.from
+            if(tmp.to != it.to) to = it.to
+
+            updateYearRange(from, to)
+        }
     }
 
     fun loadCountriesFromServer() {
@@ -40,8 +58,14 @@ class MovieSearchFilterViewModel(
             try {
                 countryMutableStateFlow.emit(LoadingCountryFilterUiState.Loading)
                 val response = loadPossibleCountriesUseCase.execute()
-                countries = response.map { CountryFilterUiState(name = it, isSelected = false) }.toMutableList()
 
+                countries = response.map { CountryFilterUiState(name = it, isSelected = false) }.toMutableList()
+                countries.forEachIndexed { i, it -> countriesIndex[it.name] = i }
+                loadMoviesParam.countries?.forEach {
+                    countriesIndex[it]?.let { i ->
+                        countries[i] = countries[i].copy(isSelected = true)
+                    }
+                }
                 countryMutableStateFlow.emit(LoadingCountryFilterUiState.Success(countries))
 
             } catch (e: Exception) {
@@ -49,7 +73,6 @@ class MovieSearchFilterViewModel(
             }
         }
     }
-
 
     fun updateAgeRatingRange(from: Int, to: Int) {
         ageRatingRangeMutableStateFlow.tryEmit(ageRatingRangeMutableStateFlow.value.copy(from = from, to = to));
@@ -91,14 +114,18 @@ class MovieSearchFilterViewModel(
         }
         if (defaultYearRange != yearRangeMutableStateFlow.value) {
 
-            if (yearRangeMutableStateFlow.value.from != -1) {
+            if (yearRangeMutableStateFlow.value.from != -1 && yearRangeMutableStateFlow.value.to != -1) {
+                yearRange = tmpDefaultYearRange.copy(from = yearRangeMutableStateFlow.value.from, to = yearRangeMutableStateFlow.value.to)
+            }
+            else if (yearRangeMutableStateFlow.value.from != -1) {
                 yearRange = tmpDefaultYearRange.copy(from = yearRangeMutableStateFlow.value.from)
             }
-            if (yearRangeMutableStateFlow.value.to != -1) {
+            else if (yearRangeMutableStateFlow.value.to != -1) {
                 yearRange = tmpDefaultYearRange.copy(to = yearRangeMutableStateFlow.value.to)
             }
 
         }
+        println(yearRange)
         return LoadMoviesParam(
             countries = countries,
             ageRantingRange = ageRantingRange,

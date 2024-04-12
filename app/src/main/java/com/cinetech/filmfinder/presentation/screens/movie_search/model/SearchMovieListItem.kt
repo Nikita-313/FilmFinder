@@ -7,7 +7,7 @@ sealed class SearchMovieListItem {
         val movieName: String,
         val movieAlternativeName: String,
         val movieYear: Int,
-        val movieRating: Double,
+        val movieRating: Double?,
         val preViewUrl: String?,
     ) : SearchMovieListItem()
 }

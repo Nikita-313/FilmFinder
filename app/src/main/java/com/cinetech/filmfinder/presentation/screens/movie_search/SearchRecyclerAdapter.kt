@@ -9,8 +9,9 @@ import com.cinetech.filmfinder.R
 import com.cinetech.filmfinder.databinding.ItemSearchMovieBinding
 import com.cinetech.filmfinder.databinding.ItemSearchQueryBinding
 import com.cinetech.filmfinder.presentation.screens.movie_search.model.SearchMovieListItem
+import java.util.Locale
 
-class SearchRecyclerAdapter : RecyclerView.Adapter<SearchRecyclerAdapter.BaseHolder>() {
+class SearchRecyclerAdapter(private val onMovieClickListener: (id: Int?, name: String?) -> Unit) : RecyclerView.Adapter<SearchRecyclerAdapter.BaseHolder>() {
 
     var items: List<SearchMovieListItem> = emptyList()
         set(newValue) {
@@ -53,7 +54,7 @@ class SearchRecyclerAdapter : RecyclerView.Adapter<SearchRecyclerAdapter.BaseHol
         abstract fun bind(item: SearchMovieListItem)
     }
 
-    class MovieHolder(private val binding: ItemSearchMovieBinding) : BaseHolder(binding.root) {
+    inner class MovieHolder(private val binding: ItemSearchMovieBinding) : BaseHolder(binding.root) {
         override fun bind(item: SearchMovieListItem) {
             if (item !is SearchMovieListItem.SearchMovieItem) return
 
@@ -75,11 +76,27 @@ class SearchRecyclerAdapter : RecyclerView.Adapter<SearchRecyclerAdapter.BaseHol
 
                 movieName.text = item.movieName
                 movieDescription.text = description
-                movieRating.text = item.movieRating.toString()
+
+                if (description.isEmpty()) {
+                    movieDescription.visibility = View.GONE
+                }
+
+                item.movieRating?.let {
+                    movieRating.text = String.format(Locale.US, "%.1f", item.movieRating)
+                }
             }
 
         }
 
+        init {
+            binding.root.setOnClickListener {
+                val position = bindingAdapterPosition;
+                if(position != RecyclerView.NO_POSITION) {
+                    val item = items[position]
+                    if(item is SearchMovieListItem.SearchMovieItem) onMovieClickListener(item.id.toInt(),item.movieName)
+                }
+            }
+        }
     }
 
     class QueryHolder(private val binding: ItemSearchQueryBinding) : BaseHolder(binding.root) {

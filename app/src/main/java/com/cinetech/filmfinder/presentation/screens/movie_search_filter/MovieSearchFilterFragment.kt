@@ -34,17 +34,18 @@ import javax.inject.Inject
 
 
 class MovieSearchFilterFragment(
-    private val callback: (params: LoadMoviesParam) -> Unit
+    private val loadMoviesParam: LoadMoviesParam,
+    private val callback: (params: LoadMoviesParam) -> Unit,
 ) : BottomSheetDialogFragment() {
 
     private val vm: MovieSearchFilterViewModel by viewModels {
-        movieSearchFilterViewModelFactory
+        movieSearchFilterViewModelFactory.create(loadMoviesParam)
     }
 
     private lateinit var binding: FragmentMovieSearchFilterBinding
 
     @Inject
-    lateinit var movieSearchFilterViewModelFactory: MovieSearchFilterViewModelFactory
+    lateinit var movieSearchFilterViewModelFactory: MovieSearchFilterViewModelFactory.Factory
 
     private var countriesArray: Array<String> = emptyArray()
     private var checkedCountriesArray: BooleanArray = emptyArray<Boolean>().toBooleanArray()
@@ -218,6 +219,7 @@ class MovieSearchFilterFragment(
                         } else {
                             ageRating.text = resources.getString(R.string.fragment_movie_search_filter_from2) + " ${it.from} " + resources.getString(R.string.fragment_movie_search_filter_to2) + " ${it.to}"
                         }
+                        ageRatingRangeSlider.values = listOf(it.from.toFloat(),it.to.toFloat())
                     }
                 }
             }
