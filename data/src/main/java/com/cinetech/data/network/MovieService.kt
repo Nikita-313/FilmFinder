@@ -41,9 +41,8 @@ interface MovieService {
     suspend fun loadCommentsByMovieId(
         @Query("movieId") movieId: Int,
         @Query("page") page: Int,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int,
+        @Query("selectFields") selectFields: List<String> = arrayListOf("id", "title", "review", "date", "author")
     ): ApiCommentsResponse
 
-    @GET("/v1.4/person/{id}")
-    suspend fun loadUserUserPhotoUrlByUId(@Path("id") id:Int): ApiUserPhotoUrl
 }
