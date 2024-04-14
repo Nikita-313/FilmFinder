@@ -1,6 +1,7 @@
 package com.cinetech.filmfinder.di.data_module
 
 import com.cinetech.data.network.MovieService
+import com.cinetech.filmfinder.BuildConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -13,8 +14,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class NetworkModule {
     companion object{
         private const val API_KEY_NAME = "X-API-KEY"
-        //Write token here:
-        private const val API_KEY = ""
         private const val API_BASE_URL = "https://api.kinopoisk.dev"
     }
 
@@ -24,7 +23,7 @@ class NetworkModule {
             val originalRequest: Request = chain.request()
             val builder: Request.Builder = originalRequest.newBuilder().header(
                 API_KEY_NAME,
-                API_KEY
+               BuildConfig.API_KEY
             )
             val newRequest: Request = builder.build()
             chain.proceed(newRequest)
